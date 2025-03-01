@@ -1,6 +1,9 @@
+//global variables to stop the robot
 bool end_game = false;
 int time;
 
+
+//moves a motor to pull back an elastic band to shoot a ping pong ball
 void pull_back()
 {
 	nMotorEncoder[motorB] = 0;
@@ -10,6 +13,8 @@ void pull_back()
 	motor[motorB] = 0;
 }
 
+
+//resets the first motor in the shooting mechanism
 void reset_1()
 {
 	nMotorEncoder[motorB] = 0;
@@ -19,6 +24,8 @@ void reset_1()
 	motor[motorB] = 0;
 }
 
+
+//resets the second motor in the shooting mechanism
 void reset_2()
 {
 	nMotorEncoder[motorC] = 0;
@@ -28,6 +35,8 @@ void reset_2()
 	motor[motorC] = 0;
 }
 
+
+//shoots the ping pong ball by letting go of an elastic band
 void shoot()
 {
 	time = time1[T1] / 1000;
@@ -40,6 +49,8 @@ void shoot()
 	reset_2();
 }
 
+
+//callibrates all sensors
 void calibrate_all()
 {
 	SensorType[S2] = sensorEV3_Gyro ;
@@ -54,6 +65,8 @@ void calibrate_all()
 	wait1Msec(50);
 }
 
+
+//resets the readings of all sensors
 void zero_all()
 {
 	nMotorEncoder[motorA] = 0;
@@ -62,6 +75,8 @@ void zero_all()
 	wait1Msec(50);
 }
 
+
+//updates the x-y coordinates of the robot
 void update_coordinates (int total_degrees, int distance, float &x, float &y, string movement_type)
 {
 	if(movement_type == "forward")
@@ -77,6 +92,8 @@ void update_coordinates (int total_degrees, int distance, float &x, float &y, st
   }
 }
 
+
+//determines if a movement is valid by making sure the robot will not move beyond the boundaries
 bool prediction (int total_degrees, int distance, float x, float y, int &x_playfield, int &y_playfield, string movement_type)
 {
 
@@ -103,6 +120,8 @@ bool prediction (int total_degrees, int distance, float x, float y, int &x_playf
 	}
 }
 
+
+//uses ultraosnic sensor to determine if someone is within 100cm
 void detect(int total_degrees, float x, float y, int &x_playfield, int &y_playfield)
 {
 	string movement_type = "forward";
@@ -118,6 +137,7 @@ void detect(int total_degrees, float x, float y, int &x_playfield, int &y_playfi
 }
 
 
+//accelerates the robot for movement
 void accel(string direction, int total_degrees, float x, float y, int x_playfield, int y_playfield)
 {
 	int speed = 0;
@@ -144,6 +164,8 @@ void accel(string direction, int total_degrees, float x, float y, int x_playfiel
 	}
 }
 
+
+//slows down the robot for stopping
 void decel(string direction, int total_degrees, float x, float y, int x_playfield, int y_playfield)
 {
 	int speed = 80;
@@ -170,6 +192,8 @@ void decel(string direction, int total_degrees, float x, float y, int x_playfiel
 	}
 }
 
+
+//initiates a random movement
 void movement(float &x, float &y, int &total_degrees, int &x_playfield, int &y_playfield)
 {
 		string movement_types[4] = {"forward", "back", "right", "left"};
@@ -242,6 +266,8 @@ void movement(float &x, float &y, int &total_degrees, int &x_playfield, int &y_p
 		}
 }
 
+
+//multitasking for a timer, making sure the robot stops after 20 seconds
 task timer()
 {
 	clearTimer(T1);
@@ -258,6 +284,7 @@ task timer()
 }
 
 
+//multitasking to ensure the robot stops if the touch sensor is pressed
 task touch_sensor()
 {
 	while(end_game != true)
@@ -272,6 +299,7 @@ task touch_sensor()
 }
 
 
+//initiates the program
 task main()
 {
 
